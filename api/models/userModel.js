@@ -4,14 +4,14 @@ var Schema = mongoose.Schema;
 
 
 var UserSchema = new Schema({
-  userName: {
+  username: {
     type: String,
     required: true
-  }
+  },
   password: {
     type: String,
     required: true
-  }
+  },
   admin: {
     type: Boolean,
     default: false
@@ -20,4 +20,9 @@ var UserSchema = new Schema({
   // receivedMess: [{ type: Schema.Types.ObjectId, ref: 'Message' }],
 });
 
-module.exports = mongoose.model('Message', MessageSchema);
+// checking if password is valid
+UserSchema.methods.validPassword = function(password) {
+    return password === this.password;
+};
+
+module.exports = mongoose.model('User', UserSchema);

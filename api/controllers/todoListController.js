@@ -2,54 +2,8 @@
 
 
 var mongoose = require('mongoose'),
-  Task = mongoose.model('Tasks'),
-  Message = mongoose.model('Message');
-
-exports.list_all_tasks = function(req, res) {
-  Task.find({}, function(err, task) {
-    if (err)
-      res.send(err);
-    res.json(task);
-  });
-};
-
-exports.create_a_task = function(req, res) {
-  var new_task = new Task(req.body);
-  new_task.save(function(err, task) {
-    if (err)
-      res.send(err);
-    res.json(task);
-  });
-};
-
-
-exports.read_a_task = function(req, res) {
-  Task.findById(req.params.taskId, function(err, task) {
-    if (err)
-      res.send(err);
-    res.json(task);
-  });
-};
-
-
-exports.update_a_task = function(req, res) {
-  Task.findOneAndUpdate(req.params.taskId, req.body, {new: true}, function(err, task) {
-    if (err)
-      res.send(err);
-    res.json(task);
-  });
-};
-
-
-exports.delete_a_task = function(req, res) {
-  Task.remove({
-    _id: req.params.taskId
-  }, function(err, task) {
-    if (err)
-      res.send(err);
-    res.json({ message: 'Task successfully deleted' });
-  });
-};
+  Message = mongoose.model('Message'),
+  User = mongoose.model('User');
 
 exports.list_all_messages = function(req, res){
   Message.find({}, function(err, mess) {
@@ -83,10 +37,6 @@ exports.determine_if_palindrome = function(req, res){
   });
 };
 
-function isPalindrome(messageStr){
-  return messageStr == messageStr.split('').reverse().join('');
-}
-
 exports.delete_a_message = function(req, res){
   Message.remove({
     _id: req.params.messageId
@@ -96,3 +46,56 @@ exports.delete_a_message = function(req, res){
     res.json({ message: 'Message successfully deleted' });
   });
 };
+
+exports.show_all_users = function (req, res){
+  User.find({}, function(err, user){
+    if(err)
+      res.send(err);
+    res.json(user);
+  });
+};
+
+exports.create_user = function(passport){
+  passport.authenticate('local-signup', {
+  successRedirect : '/profile', // redirect to the secure profile section
+  failureRedirect : '/signup', // redirect back to the signup page if there is an error
+  failureFlash : true // allow flash messages
+});
+};
+
+exports.show_login = function(req, res){
+    res.send("this is the login page");
+};
+
+exports.login = function(req, res){
+
+};
+
+exports.show_signup = function(req, res){
+    res.send("this is the sign up page");
+};
+
+exports.logout = function(req, res){
+    req.logout();
+    res.redirect('/login');
+};
+
+exports.render_homepage = function(req, res, next){
+    isLoggedIn(req, res, next);
+    // res.json({message: "the user is logged in", user: req.user });
+}
+
+function isPalindrome(messageStr){
+  return messageStr == messageStr.split('').reverse().join('');
+};
+
+
+exports.isLoggedIn = function(req, res, next) {
+    // if user is authenticated in the session, carry on 
+    if (req.isAuthenticated())
+        return next();
+
+    // if they aren't redirect them to the home page
+    res.redirect('/');
+}
+
