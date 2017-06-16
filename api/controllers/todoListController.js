@@ -89,7 +89,6 @@ function isPalindrome(messageStr){
   return messageStr == messageStr.split('').reverse().join('');
 };
 
-
 exports.isLoggedIn = function(req, res, next) {
     // if user is authenticated in the session, carry on 
     if (req.isAuthenticated())
