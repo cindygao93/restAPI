@@ -2,16 +2,14 @@
 
 var mongoose = require('mongoose'),
   Message = mongoose.model('Message'),
-  User = mongoose.model('User'),
-  app = require('../../server'),
-  jwt = require('jsonwebtoken');
+  User = mongoose.model('User');
 
 exports.list_all_messages = function(req, res){
-  Message.find({}, function(err, mess) {
-    if (err)
-      res.send(err);
-    res.json(mess);
-  });
+    Message.find({}, function(err, mess) {
+      if (err)
+        res.send(err);
+      res.json(mess);
+    });
 };
 
 exports.create_a_message = function (req, res){
@@ -84,72 +82,45 @@ exports.show_all_users = function (req, res){
 
 //function that generates tokens
 exports.check_auth = function(req, res){
-  console.log("i am here")
-  console.log(req.body);
   User.findOne({
     username: req.body.username
   }, function(err, user) {
 
     if (err) throw err;
-    console.log(user);
-    console.log(!user)
     if (!user) {
-          console.log("one")
       res.json({ success: false, message: 'Authentication failed. User not found.' });
-    } else if (user) {
-      console.log("two");
+    } else {
 
       // check if password matches
       if (user.password != req.body.password) {
         res.json({ success: false, message: 'Authentication failed. Wrong password.' });
       } else {
-          console.log("logic");
         // if user is found and password is right
-        // create a token
-        var token = jwt.sign(user, app.get('superSecret'), {
-          expiresIn: 1440 // expires in 24 hours
-        });
-
-        // return the information including token as JSON
-        res.json({
-          success: true,
-          message: 'Enjoy your token!',
-          token: token
-        });
-      }   
-
+        req.session.isAuthenicated = true;
+        req.session.user = user;
+        console.log(req.session);
+        console.log(req.session.id);
+        res.json({ success: true, message: 'Authentication succeeded. You can now view your messages' })
+      }
     }
-
   });
 };
 
-//function that checks for a token
-exports.check_for_token = function(req, res, next) {
 
-  // check header or url parameters or post parameters for token
-  var token = req.body.token || req.query.token || req.headers['x-access-token'];
 
-  // decode token
-  if (token) {
-
-    // verifies secret and checks exp
-    jwt.verify(token, app.get('superSecret'), function(err, decoded) {      
-      if (err) {
-        return res.json({ success: false, message: 'Failed to authenticate token.' });    
-      } else {
-        // if everything is good, save to request for use in other routes
-        req.decoded = decoded;    
-        next();
-      }
-    });
-
-  } else {
-
-    // if there is no token
-    // return an error
-    return res.status(403).send({ 
-        success: false, 
-        message: 'No token provided.' 
-    });
+exports.check_logged_in = function(req, res){
+  console.log(req.session);
+        console.log(req.session.id);
+  if(req.session.isAuthenicated){
+      res.end()
+  } else{
+      res.json({ success: false, message: 'You do not have permission to access this. Please login.' }); 
   }
 };
+
+exports.logout = function(req, res){
+  req.session.destroy();
+  res.json({message: "you have logged out"});
+}
+
+
