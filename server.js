@@ -8,7 +8,6 @@ var express = require('express'),
   User = require('./api/models/userModel'),
   bodyParser = require('body-parser'),
   cookieParser = require('cookie-parser'),
-  // basicAuth = require('basic-auth-connect'),
   session = require('express-session');
   
 mongoose.Promise = global.Promise;
