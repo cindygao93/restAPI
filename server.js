@@ -1,18 +1,23 @@
 var express = require('express'),
   app = express(),
   port = process.env.PORT || 3000,
+  morgan = require('morgan'),
   mongoose = require('mongoose'),
   Task = require('./api/models/todoListModel'),
   Message = require('./api/models/messageModel'),
-  bodyParser = require('body-parser');
+  User = require('./api/models/userModel'),
+  bodyParser = require('body-parser'),
+  cookieParser = require('cookie-parser'),
+  // basicAuth = require('basic-auth-connect'),
+  session = require('express-session');
   
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/Tododb'); 
+mongoose.connect('mongodb://localhost/Tododb');
 
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
+app.use(morgan('dev'));
 
 var routes = require('./api/routes/todoListRoutes');
 routes(app);
@@ -22,3 +27,7 @@ app.listen(port);
 
 
 console.log('todo list RESTful API server started on: ' + port);
+
+//global variables to mock the session
+customSession = {};
+exports.session = customSession;

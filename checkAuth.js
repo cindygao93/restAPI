@@ -2,9 +2,9 @@ var request = require('request')
 
 var options = {
   method: 'post',
-  body: {Created_date: Date.now, message: "i am a genius", receiver: "594398ebeab1448131962108"}, // Javascript object
+  body: {username: "cindy", password: "password"},
   json: true, // Use,If you are sending JSON data
-  url: "http://localhost:3000/messages",
+  url: "http://localhost:3000/auth",
   headers: {
     // Specify headers, If any
   }

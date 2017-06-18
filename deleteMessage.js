@@ -3,7 +3,7 @@ var request = require('request')
 var options = {
   method: 'delete',
   json: true, // Use,If you are sending JSON data
-  url: "http://localhost:3000/messages/594026c504011e644246940f",
+  url: "http://localhost:3000/messages/5945dfa2b39014927f692443",
   headers: {
     // Specify headers, If any
   }

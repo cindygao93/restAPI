@@ -4,14 +4,15 @@ var Schema = mongoose.Schema;
 
 
 var UserSchema = new Schema({
-  userName: {
+  username: {
     type: String,
-    required: true
-  }
+    required: true,
+    unique: true
+  },
   password: {
     type: String,
     required: true
-  }
+  },
   admin: {
     type: Boolean,
     default: false
@@ -20,4 +21,4 @@ var UserSchema = new Schema({
   // receivedMess: [{ type: Schema.Types.ObjectId, ref: 'Message' }],
 });
 
-module.exports = mongoose.model('Message', MessageSchema);
+module.exports = mongoose.model('User', UserSchema);

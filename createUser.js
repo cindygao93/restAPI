@@ -1,9 +1,10 @@
 var request = require('request')
 
 var options = {
-  method: 'delete',
+  method: 'post',
+  body: {username: "bob3", password: "password111"},
   json: true, // Use,If you are sending JSON data
-  url: "http://localhost:3000/tasks/594012f0a0c59b5ef4a7911e",
+  url: "http://localhost:3000/signup",
   headers: {
     // Specify headers, If any
   }
