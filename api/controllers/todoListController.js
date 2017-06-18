@@ -1,10 +1,11 @@
 'use strict';
 
 var mongoose = require('mongoose'),
+  server = require('../../server'),
   Message = mongoose.model('Message'),
   User = mongoose.model('User');
 
-exports.list_all_messages = function(req, res){
+exports.list_all_messages_all_users = function(req, res){
     Message.find({}, function(err, mess) {
       if (err)
         res.send(err);
@@ -12,17 +13,42 @@ exports.list_all_messages = function(req, res){
     });
 };
 
-exports.create_a_message = function (req, res){
-  var newMess = new Message(req.body);
-  newMess.save(function(err, mess) {
-    if (err)
-      res.send(err);
-    res.json(mess);
-  });
+exports.list_all_messages = function(req, res){
+    Message.find({receiver: server.session.user._id}, function(err, mess) {
+      if (err)
+        res.send(err);
+      res.json(mess);
+    });
 };
 
+exports.create_a_message = function (req, res){
+
+  console.log(req.body);
+
+  User.findById(req.body.receiver, function(err, user){
+    if(err){
+      console.log(err);
+      res.json("user you are sending to does not exist");
+    } else{
+      console.log("user exists");
+        delete req.body.receiver;
+        req.body.receiver = user._id;
+        req.body.sender = server.session.user._id;
+        console.log(user);
+        var newMess = new Message(req.body);
+        newMess.save(function(err, mess) {
+          if (err){
+            res.send(err);
+          }
+          res.json(mess);
+        });
+      }
+    })
+  };
+
+
 exports.determine_if_palindrome = function(req, res){
-  Message.findById(req.params.messageId, function(err, mess) {
+  Message.findOne({receiver: server.session.user._id, _id: req.params.messageId}, function(err, mess) {
     if (err){
       res.send(err);
     } else {
@@ -41,14 +67,17 @@ function isPalindrome(messageStr){
 }
 
 exports.delete_a_message = function(req, res){
-  Message.remove({
-    _id: req.params.messageId
-  }, function(err, mess) {
-    if (err)
+  Message.findOneAndRemove({ _id: req.params.messageId, receiver: server.session.user._id},
+  function(err, mess) {
+    if (err){
       res.send(err);
-    res.json({ message: 'Message successfully deleted' });
+    }
+    else if(mess){
+      res.json({ status: 'Message successfully deleted', message: mess });
+    }
   });
 };
+
 
 exports.create_user = function(req, res){
   User.find({username: req.body.username}, function(err, user){
@@ -82,45 +111,37 @@ exports.show_all_users = function (req, res){
 
 //function that generates tokens
 exports.check_auth = function(req, res){
-  User.findOne({
-    username: req.body.username
-  }, function(err, user) {
-
-    if (err) throw err;
-    if (!user) {
-      res.json({ success: false, message: 'Authentication failed. User not found.' });
-    } else {
-
-      // check if password matches
-      if (user.password != req.body.password) {
-        res.json({ success: false, message: 'Authentication failed. Wrong password.' });
-      } else {
-        // if user is found and password is right
-        req.session.isAuthenicated = true;
-        req.session.user = user;
-        console.log(req.session);
-        console.log(req.session.id);
-        res.json({ success: true, message: 'Authentication succeeded. You can now view your messages' })
-      }
+  var username = req.body.username;
+  var pass = req.body.password;
+  User.findOne({username: username, password: pass}, function(err, user){
+    if(err){
+      return res.json(err);
     }
-  });
+    if(!user){
+      return res.json({ success: false, message: 'Authentication failed. User does not exist or password is wrong.' });
+    }
+    server.session.user = user;
+    console.log('customSession:' + JSON.stringify(server.session));
+    return res.json({ success: true, message: 'Authentication succeeded. You can now view your messages' })
+  })
 };
 
-
-
-exports.check_logged_in = function(req, res){
-  console.log(req.session);
-        console.log(req.session.id);
-  if(req.session.isAuthenicated){
-      res.end()
+exports.check_logged_in = function(req, res, next){
+  if(server.session.user){
+    next();
   } else{
       res.json({ success: false, message: 'You do not have permission to access this. Please login.' }); 
   }
 };
 
 exports.logout = function(req, res){
-  req.session.destroy();
-  res.json({message: "you have logged out"});
+  if(server.session.user){
+    server.session = {};
+    res.json({success: true, message: 'you have logged out'});
+  }
+  else{
+    res.redirect('/');
+  }
 }
 
 

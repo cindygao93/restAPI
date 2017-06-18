@@ -12,13 +12,17 @@ var MessageSchema = new Schema({
     type: String,
     required: true
   },
-  status: {
-    type: [{
-      type: String,
-      enum: ['pending', 'ongoing', 'completed']
-    }],
-    default: ['pending']
+  sender: { 
+    type: Schema.Types.ObjectId, 
+    ref: 'User',
+    required: true
+  },
+  receiver: { 
+    type: Schema.Types.ObjectId, 
+    ref: 'User',
+    required: true
   }
+
 });
 
 module.exports = mongoose.model('Message', MessageSchema);

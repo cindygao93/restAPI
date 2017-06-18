@@ -2,7 +2,7 @@ var request = require('request')
 
 var options = {
   method: 'post',
-  body: {username: "bob", password: "password111"},
+  body: {username: "cindy", password: "password"},
   json: true, // Use,If you are sending JSON data
   url: "http://localhost:3000/auth",
   headers: {
