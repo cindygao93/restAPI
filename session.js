@@ -1,3 +1,0 @@
-//session object
-
-exports.session = {};
