@@ -10,6 +10,8 @@ This REST api uses the Express.js for the server, MongoDB for the database and N
 
 
 ## Use Case Interaction
+![Use Case 1](https://github.com/cindygao93/restAPI.git/seq1.png)
+![Use Case 2](https://github.com/cindygao93/restAPI.git/seq2.png)
 
 
 ## Build, Deploy, Access App
