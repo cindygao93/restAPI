@@ -7,7 +7,6 @@ var express = require('express'),
   Message = require('./api/models/messageModel'),
   User = require('./api/models/userModel'),
   bodyParser = require('body-parser'),
-  cookieParser = require('cookie-parser'),
   session = require('express-session');
   
 mongoose.Promise = global.Promise;
