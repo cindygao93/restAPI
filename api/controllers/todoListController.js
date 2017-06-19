@@ -93,6 +93,7 @@ exports.create_user = function(req, res){
         if (err){
           res.send(err);
         } else{
+          server.session.user = user;
           res.json({created_user: true, user: user});
         }
       });

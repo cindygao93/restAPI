@@ -27,6 +27,6 @@ app.listen(port);
 
 console.log('todo list RESTful API server started on: ' + port);
 
-//global variables to mock the session
-customSession = {};
+// global variables to mock the session
+var customSession = {};
 exports.session = customSession;
