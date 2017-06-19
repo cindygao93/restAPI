@@ -17,3 +17,40 @@ This REST api uses the Express.js for the server, MongoDB for the database and N
 To use this app, in terminal enter 'git clone: https://github.com/cindygao93/restAPI.git' in the folder of your choice. Follow the API documentation below to see how to use the web app.
 
 **Rest API documentation**
+_currently just for running on local server_
+
+Creating a user:
+
+method: POST
+body: {username: "insert username here", password: "insert password here"}
+route: /signup
+
+Viewing user received messages:
+method: GET
+route: /messages
+Creating a message:
+
+method: POST
+body: {message: "insert message", created_date: "optional", receiver: "id of receiptent user"}
+route: /messages
+
+Deleting a message:
+-deletes message with id of @id
+
+method: DELETE
+route: /messages/@id
+
+Determining if specific message is palindrome:
+-deletes if message with id of @id is a palindrome or not
+
+method: GET
+route: /messages/@id
+
+
+Logging out:
+
+method: GET
+route: /logout
+
+
+
