@@ -20,6 +20,7 @@ To use this app, in terminal enter 'git clone: https://github.com/cindygao93/res
 
 ## Rest API documentation
 _currently just for running on local server_
+
 Live web app can be viewed here: https://shrouded-bastion-77652.herokuapp.com/
 but seems to throw error even though it runs fine on local server
 
@@ -65,6 +66,7 @@ returns: json with status and whether string is palindrome or not
 ```
 method: GET
 route: /logout
+returns: status saying logout succeeded
 ```
 
 
