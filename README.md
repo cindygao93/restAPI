@@ -20,8 +20,8 @@ To use this app, in terminal enter 'git clone: https://github.com/cindygao93/res
 _currently just for running on local server_
 
 **Creating a user:**
-
-```request 
+```
+request 
 method: POST
 body params: 
     {username: "insert username here", password: "insert password here"}
@@ -29,31 +29,37 @@ route: /signup
 ```
 
 **Viewing user received messages:**
-```method: GET
+```
+method: GET
 route: /messages
--returns json of messages
+returns: json of messages
 ```
 
 **Creating a message:**
-```method: POST
+```
+method: POST
 body: {message: "insert message", created_date: "optional", receiver: "id of receiptent user"}
 route: /messages
 ```
 
 **Deleting a message:**
-```-deletes message with id of @id
+```
+-deletes message with id of @id
 method: DELETE
 route: /messages/@id
 ```
 
 **Determining if specific message is palindrome:**
-```-determines if message with id of @id is a palindrome or not
+```
+-determines if message with id of @id is a palindrome or not
 method: GET
 route: /messages/@id
+returns: json with status and whether string is palindrome or not
 ```
 
 **Logging out:**
-```method: GET
+```
+method: GET
 route: /logout
 ```
 
